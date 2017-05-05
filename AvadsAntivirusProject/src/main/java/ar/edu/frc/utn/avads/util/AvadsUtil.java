@@ -51,6 +51,12 @@ public class AvadsUtil {
         return file;
     }
     
+    public static File getFileResourceByPath(String path)
+    {
+	return new File(AvadsUtil.class.getClassLoader().getResource(path).getFile());        
+    }        
+            
+    
     public static Image createImage(String path, String description) {
         URL imageURL = AvadsUtil.class.getResource(path);
         

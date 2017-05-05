@@ -74,7 +74,7 @@ public class DBServiceMongoImpl implements DBService{
         MongoCollection<Document> collectionDB = mdb.getCollection(nomCollection);   
         MongoCursor<Document> iterator = collectionDB.find().projection(excludeId()).iterator();
 
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         while (iterator.hasNext()) 
         {
             Document doc = iterator.next();
@@ -110,7 +110,7 @@ public class DBServiceMongoImpl implements DBService{
         if(value.getClass().equals(Double.class)) whereQuery.put(atribute, Double.parseDouble(String.valueOf(value)));
         
         DBCursor cursor = collectionDB.find(whereQuery, removeIdProjection);
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         while (cursor.hasNext()) 
         {
             list.add(cursor.next().toString());
@@ -136,7 +136,8 @@ public class DBServiceMongoImpl implements DBService{
         }
         
         DBCursor cursor = collectionDB.find(whereQuery, removeIdProjection);
-        List<String> list = new ArrayList<String>();
+        List<String> list;
+        list = new ArrayList<>();
         while (cursor.hasNext()) 
         {
             list.add(cursor.next().toString());
