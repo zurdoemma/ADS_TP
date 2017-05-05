@@ -5,8 +5,12 @@
  */
 package ar.edu.frc.utn.avads.main;
 
+import ar.edu.frc.utn.avads.scan.service.impl.VirusTotalFileScanServiceImpl;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,8 +34,7 @@ public class AvadsMain {
      */
     public static void main(String[] args) {
         
-        try 
-        {    
+        try {    
             InputStream inputC = new FileInputStream("ApplicationResources_es.properties");
             try 
             {
@@ -47,12 +50,20 @@ public class AvadsMain {
                 Logger.getLogger(AvadsMain.class.getName()).log(Level.SEVERE, null, ex);
             }
         } 
-        catch (FileNotFoundException ex) 
-        {
+        catch (FileNotFoundException ex) {
             Logger.getLogger(AvadsMain.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }              
         
+        try {
+                new VirusTotalFileScanServiceImpl().scanFile(new File("/home/gustavo/TestVS.exe"));
+                new VirusTotalFileScanServiceImpl().fileReport("c65f8a83fa607f9e98d041ea90c6e6cb06d9d27ec5077e48beb62bd39a19e8f5-1492475018");
+
+        } catch (UniformInterfaceException e) {
+                e.printStackTrace();
+        } catch (ClientHandlerException e) {
+                e.printStackTrace();
+        }        
 
     }
    

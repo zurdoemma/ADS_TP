@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ar.edu.frc.utn.avads.db;
+package ar.edu.frc.utn.avads.db.impl;
 
+import ar.edu.frc.utn.avads.db.service.DBService;
 import ar.edu.frc.utn.avads.main.AvadsMain;
 import com.mongodb.BasicDBObject;
  
@@ -29,50 +30,47 @@ import org.bson.Document;
  *
  * @author ecarballo
  */
-public class MongoDB {
+public class DBServiceMongoImpl implements DBService{
     
     private static MongoClient mongoClient = null;
     public static DB db = null;
     public static MongoDatabase mdb = null;
     
-    public static void startDB() {
-        try 
-        {
-            String DB_SRV_USR = AvadsMain.propC.getProperty("db.mongo.user");
-            String DB_SRV_PWD = AvadsMain.propC.getProperty("db.mongo.pwd");
-            String DB_URL = AvadsMain.propC.getProperty("db.mongo.url");
-            String DB_PORT = AvadsMain.propC.getProperty("db.mongo.puerto");
-            String dbName = AvadsMain.propC.getProperty("db.mongo.nombre.db");
-            
-            String mongoClientURI = "mongodb://" + DB_SRV_USR + ":" + DB_SRV_PWD + "@" + DB_URL + ":" + DB_PORT + "/" + dbName; 
-            MongoClientURI connectionString = new MongoClientURI(mongoClientURI);
+    @Override
+    public void startDB() {
 
-            // enable SSL connection
-            MongoClientOptions.builder().sslEnabled(true).build();            
-            mongoClient = new MongoClient(connectionString);
-            db = mongoClient.getDB(dbName);
-            mdb = mongoClient.getDatabase(dbName);
-                         
-        } 
-        catch (Exception ex) 
-        {
-            ex.printStackTrace();
-        }
+        String DB_SRV_USR = AvadsMain.propC.getProperty("db.mongo.user");
+        String DB_SRV_PWD = AvadsMain.propC.getProperty("db.mongo.pwd");
+        String DB_URL = AvadsMain.propC.getProperty("db.mongo.url");
+        String DB_PORT = AvadsMain.propC.getProperty("db.mongo.puerto");
+        String dbName = AvadsMain.propC.getProperty("db.mongo.nombre.db");
+
+        String mongoClientURI = "mongodb://" + DB_SRV_USR + ":" + DB_SRV_PWD + "@" + DB_URL + ":" + DB_PORT + "/" + dbName; 
+        MongoClientURI connectionString = new MongoClientURI(mongoClientURI);
+
+        MongoClientOptions.builder().sslEnabled(true).build();            
+        mongoClient = new MongoClient(connectionString);
+        db = mongoClient.getDB(dbName);
+        mdb = mongoClient.getDatabase(dbName);
          
     }
     
-    public static void closeDB(){
+    @Override
+    public void closeDB(){
         mongoClient.close();
     }
     
+    @Override
     public void insertCollection(String nomCollection, String collection){
-        DBCollection collectionDB = db.getCollection(nomCollection);
         
+        DBCollection collectionDB = db.getCollection(nomCollection);
         DBObject dbObject = (DBObject)JSON.parse(collection);
-        System.out.println(collectionDB.insert(dbObject));
+        collectionDB.insert(dbObject);
     }
     
+    @Override
     public List<String> getAllCollection(String nomCollection){
+        
         MongoCollection<Document> collectionDB = mdb.getCollection(nomCollection);   
         MongoCursor<Document> iterator = collectionDB.find().projection(excludeId()).iterator();
 
@@ -86,7 +84,9 @@ public class MongoDB {
         return list;
     }
     
-    public Long getMaxIdProceso(String nomCollection, String atribute){
+    @Override
+    public Long getMaxIdProceso(String nomCollection, String atribute) {
+        
         DBCollection collectionDB = db.getCollection(nomCollection);
         DBObject busMax = new BasicDBObject(atribute, -1);
         DBCursor res = collectionDB.find().sort(busMax).limit(1);
@@ -96,7 +96,9 @@ public class MongoDB {
         else return -1L;
     }
 
-    public List<String> findObjectCollection(String nomCollection, String atribute, Object value){
+    @Override
+    public List<String> findObjectCollection(String nomCollection, String atribute, Object value) {
+        
         DBCollection collectionDB = db.getCollection(nomCollection);
         
         DBObject removeIdProjection = new BasicDBObject("_id", 0);
@@ -117,7 +119,9 @@ public class MongoDB {
         return list;
     }
     
-    public List<String> findObjectCollectionMultipleAtributes(String nomCollection, Map<String,Object> atributeValue){
+    @Override
+    public List<String> findObjectCollectionMultipleAtributes(String nomCollection, Map<String,Object> atributeValue) {
+        
         DBCollection collectionDB = db.getCollection(nomCollection);
         
         DBObject removeIdProjection = new BasicDBObject("_id", 0);
@@ -141,7 +145,9 @@ public class MongoDB {
         return list;
     }    
         
-    public boolean removeObjectCollection(String nomCollection, String atribute, Object value){
+    @Override
+    public boolean removeObjectCollection(String nomCollection, String atribute, Object value) {
+        
         DBCollection collectionDB = db.getCollection(nomCollection);
         
         BasicDBObject documentR = new BasicDBObject();
@@ -154,12 +160,16 @@ public class MongoDB {
         else return true;
     }  
     
-    public Long getCountObjectsCollection(String nomCollection){
+    @Override
+    public Long getCountObjectsCollection(String nomCollection) {
+        
         DBCollection collectionDB = db.getCollection(nomCollection);
         return collectionDB.count();
     }    
     
-    public boolean updateObjectCollection(String nomCollection, Map<String, Object> atributeValueSearch, Map<String, Object> atributeValueUpdate){
+    @Override
+    public boolean updateObjectCollection(String nomCollection, Map<String, Object> atributeValueSearch, Map<String, Object> atributeValueUpdate) {
+        
         DBCollection collectionDB = db.getCollection(nomCollection);
         
         BasicDBObject newDocument = new BasicDBObject();
