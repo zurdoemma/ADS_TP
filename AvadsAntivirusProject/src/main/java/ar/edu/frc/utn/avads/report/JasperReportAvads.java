@@ -38,8 +38,7 @@ public class JasperReportAvads
     private void runReporteAnalisisArchivo(Map<String, Object> parametros, String reporte) {
         
         try {
-            System.out.println(reporte);
-            File file = new File(getClass().getClassLoader().getResource(reporte).getPath());
+            File file = AvadsUtil.getFileByPath(reporte);
 
             JasperReport masterReport = (JasperReport) JRLoader.loadObject(file);
 
