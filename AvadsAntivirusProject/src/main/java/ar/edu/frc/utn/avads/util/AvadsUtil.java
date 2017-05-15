@@ -5,6 +5,7 @@
  */
 package ar.edu.frc.utn.avads.util;
 
+import com.google.gson.Gson;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
@@ -28,10 +29,11 @@ import org.apache.commons.lang.WordUtils;
  */
 public class AvadsUtil {
 
+    public static Gson gson = new Gson();
+    
     public AvadsUtil() {
     }
  
-    
     public static Image getImageByPath(String path) {
         URL imgURL = AvadsUtil.class.getResource(path);
         Image imagen = Toolkit.getDefaultToolkit().getImage(imgURL);
@@ -93,6 +95,8 @@ public class AvadsUtil {
         String dateR = null;
         SimpleDateFormat fech = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat fech2 = new SimpleDateFormat("dd/MM/yyyy");
+        
+        if(date == null || date.trim().compareTo("null") == 0) return null;
         try {
             dateR = fech2.format(fech.parse(date));
         } catch (ParseException ex) {

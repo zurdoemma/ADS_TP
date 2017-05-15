@@ -19,7 +19,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form VentanaPrincipal
      */
-        
+    
+    public static VentanaConfiguracion vConfiguracion = null;
+    public static VentanaExaminarArchivo vExaminarArchivo = null;
+    public static VentanaEstadoAnalisis vEstadoArchivos = null;
+    
     public VentanaPrincipal() {
         initComponents();
         
@@ -150,16 +154,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemSalirActionPerformed
 
     private void jMenuItemConfiguracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemConfiguracionActionPerformed
-
-        
+        if(vConfiguracion == null) vConfiguracion = new VentanaConfiguracion(this, true);
+        vConfiguracion.setLocationRelativeTo(null);
+        vConfiguracion.setVisible(true);
+        vConfiguracion.requestFocus();  
     }//GEN-LAST:event_jMenuItemConfiguracionActionPerformed
 
     private void jMenuItemExaminarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExaminarArchivoActionPerformed
-
+        if(vExaminarArchivo == null) vExaminarArchivo = new VentanaExaminarArchivo(this, true);
+        vExaminarArchivo.setLocationRelativeTo(null);
+        vExaminarArchivo.setVisible(true);
+        vExaminarArchivo.requestFocus();
     }//GEN-LAST:event_jMenuItemExaminarArchivoActionPerformed
 
     private void jMenuItemEstadoArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEstadoArchivosActionPerformed
-
+        if(vEstadoArchivos == null) vEstadoArchivos = new VentanaEstadoAnalisis();
+        vEstadoArchivos.setLocationRelativeTo(null);
+        vEstadoArchivos.setVisible(true);
+        vEstadoArchivos.requestFocus();
     }//GEN-LAST:event_jMenuItemEstadoArchivosActionPerformed
 
     

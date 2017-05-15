@@ -8,10 +8,7 @@ package ar.edu.frc.utn.avads.main;
 import ar.edu.frc.utn.avads.db.impl.DBServiceMongoImpl;
 import ar.edu.frc.utn.avads.db.service.DBService;
 import ar.edu.frc.utn.avads.igu.VentanaPrincipal;
-import ar.edu.frc.utn.avads.scan.service.impl.VirusTotalFileScanServiceImpl;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import java.awt.AWTException;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -19,7 +16,6 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -54,9 +50,8 @@ public class AvadsMain {
         cargarEstiloVentanas();
         
         serviceDB.startDB();
-        ventPrincipal = new VentanaPrincipal();        
+        ventPrincipal = new VentanaPrincipal(); 
         if (!SystemTray.isSupported()) {
-            System.out.println(propC.getProperty("principal.sysTray"));
             ventPrincipal.setVisible(true);
         }
         else 
@@ -65,15 +60,6 @@ public class AvadsMain {
                 armarMenu();
             });
         }             
-        
-        try {
-                new VirusTotalFileScanServiceImpl().scanFile(new File("/home/gustavo/TestVS.exe"));
-                new VirusTotalFileScanServiceImpl().fileReport("c65f8a83fa607f9e98d041ea90c6e6cb06d9d27ec5077e48beb62bd39a19e8f5-1492475018");
-
-        } catch (UniformInterfaceException | ClientHandlerException e) {
-                e.printStackTrace();
-        }        
-
     }
    
     private static void cargarPropiedades() {
