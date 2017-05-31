@@ -23,6 +23,13 @@ import ar.edu.frc.utn.avads.scan.service.impl.VirusTotalFileScanServiceImpl;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -62,8 +69,8 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 		} catch (IOException e) {
 			return Response.status(500).entity("Can not save file").build();
 		}
-		String jsonResponse = fileScanService.fileReportJSON("");
-		System.out.println("jsonResponse" + jsonResponse);
+		//String jsonResponse = fileScanService.fileReportJSON("");
+		//System.out.println("jsonResponse" + jsonResponse);
 		return Response.status(200)
 				.entity("File saved to " + uploadedFileLocation).build();
 	}
@@ -98,5 +105,19 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 			theDir.mkdir();
 		}
 	}
+        
+        private String CheckSumFile(InputStream fileStream)
+        {
+            MessageDigest md = null;
+            try {
+                md = MessageDigest.getInstance("MD5");
+                DigestInputStream dis = new DigestInputStream(fileStream, md);                
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(FileScanRestServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            byte[] digest = md.digest();             
+            return digest.toString();
+        }
 
 }
