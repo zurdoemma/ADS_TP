@@ -94,5 +94,10 @@
 			<artifactId>jasperreports</artifactId>
 			<version>6.3.1</version>
 		</dependency>
+	 <dependency>
+	  <groupId>ar.edu.frc.utn.avads.common</groupId>
+	  <artifactId>AvadsCommonProject</artifactId>
+	  <version>0.0.1-SNAPSHOT</version>
+	 </dependency>
 	</dependencies>
 </project>

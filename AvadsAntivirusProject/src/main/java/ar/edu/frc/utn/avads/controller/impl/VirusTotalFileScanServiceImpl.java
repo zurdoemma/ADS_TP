@@ -2,6 +2,7 @@ package ar.edu.frc.utn.avads.controller.impl;
 
 import ar.edu.frc.utn.avads.controller.FileScanService;
 import ar.edu.frc.utn.avads.main.AvadsMain;
+import ar.edu.frc.utn.avads.util.PropertiesUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -30,10 +31,10 @@ public class VirusTotalFileScanServiceImpl implements FileScanService {
 
 	final static Logger log = Logger.getLogger(VirusTotalFileScanServiceImpl.class.getName());
 	
-	private static final String URI_FILE_SCAN = AvadsMain.propC.getProperty("host.url")
-			+ AvadsMain.propC.getProperty("url.file.scan");
-	private static final String URI_FILE_SCAN_REPORT = AvadsMain.propC.getProperty("host.url")
-			+ AvadsMain.propC.getProperty("url.file.scan.report");
+	private static final String URI_FILE_SCAN = PropertiesUtil.getProperty("host.url")
+			+ PropertiesUtil.getProperty("url.file.scan");
+	private static final String URI_FILE_SCAN_REPORT = PropertiesUtil.getProperty("host.url")
+			+ PropertiesUtil.getProperty("url.file.scan.report");
 
 	public Map<String, Object> scanFile(File file) {
 		Map<String, Object> mapResponse = new HashMap<String, Object>();
@@ -42,9 +43,9 @@ public class VirusTotalFileScanServiceImpl implements FileScanService {
 			Client client = Client.create();
 			WebResource webResource = client.resource(URI_FILE_SCAN);
 
-			FileDataBodyPart filePart = new FileDataBodyPart(AvadsMain.propC.getProperty("file.field.key.name"),file);
+			FileDataBodyPart filePart = new FileDataBodyPart(PropertiesUtil.getProperty("file.field.key.name"),file);
 
-			MultiPart multipartEntity = new FormDataMultiPart().field(AvadsMain.propC.getProperty("api.key.name"), AvadsMain.propC.getProperty("api.key"),
+			MultiPart multipartEntity = new FormDataMultiPart().field(PropertiesUtil.getProperty("api.key.name"), PropertiesUtil.getProperty("api.key"),
 					MediaType.TEXT_PLAIN_TYPE).bodyPart(filePart);
 
 			ClientResponse response = webResource.type(
@@ -79,8 +80,8 @@ public class VirusTotalFileScanServiceImpl implements FileScanService {
 			WebResource webResource = client.resource(URI_FILE_SCAN_REPORT);
 
 			MultivaluedMap<String, String> keyValuesPairs = new MultivaluedMapImpl();
-			keyValuesPairs.putSingle(AvadsMain.propC.getProperty("api.key.name"), AvadsMain.propC.getProperty("api.key"));
-			keyValuesPairs.putSingle(AvadsMain.propC.getProperty("resource.field.key.name"), scanId);
+			keyValuesPairs.putSingle(PropertiesUtil.getProperty("api.key.name"), PropertiesUtil.getProperty("api.key"));
+			keyValuesPairs.putSingle(PropertiesUtil.getProperty("resource.field.key.name"), scanId);
 			
 			ClientResponse response = webResource.type(
 					MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class,
@@ -117,9 +118,9 @@ public class VirusTotalFileScanServiceImpl implements FileScanService {
 			Client client = Client.create();
 			WebResource webResource = client.resource(URI_FILE_SCAN);
 
-			FileDataBodyPart filePart = new FileDataBodyPart(AvadsMain.propC.getProperty("file.field.key.name"),file);
+			FileDataBodyPart filePart = new FileDataBodyPart(PropertiesUtil.getProperty("file.field.key.name"),file);
 
-			MultiPart multipartEntity = new FormDataMultiPart().field(AvadsMain.propC.getProperty("api.key.name"), AvadsMain.propC.getProperty("api.key"),
+			MultiPart multipartEntity = new FormDataMultiPart().field(PropertiesUtil.getProperty("api.key.name"), PropertiesUtil.getProperty("api.key"),
 					MediaType.TEXT_PLAIN_TYPE).bodyPart(filePart);
 
 			ClientResponse response = webResource.type(
@@ -147,8 +148,8 @@ public class VirusTotalFileScanServiceImpl implements FileScanService {
 			WebResource webResource = client.resource(URI_FILE_SCAN_REPORT);
 
 			MultivaluedMap<String, String> keyValuesPairs = new MultivaluedMapImpl();
-			keyValuesPairs.putSingle(AvadsMain.propC.getProperty("api.key.name"), AvadsMain.propC.getProperty("api.key"));
-			keyValuesPairs.putSingle(AvadsMain.propC.getProperty("resource.field.key.name"), scanId);
+			keyValuesPairs.putSingle(PropertiesUtil.getProperty("api.key.name"), PropertiesUtil.getProperty("api.key"));
+			keyValuesPairs.putSingle(PropertiesUtil.getProperty("resource.field.key.name"), scanId);
 			
 			ClientResponse response = webResource.type(
 					MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class,

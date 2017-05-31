@@ -6,8 +6,8 @@
 
 package ar.edu.frc.utn.avads.igu;
 
-import ar.edu.frc.utn.avads.main.AvadsMain;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
@@ -32,15 +32,15 @@ public class PnlFondoJDialog extends javax.swing.JPanel {
         Dimension tamanio = getSize();              
         ImageIcon imagenFondo = null;
 
-        String[] estilosVentana = AvadsMain.propC.getProperty("igu.configuracion.estilos.ventana").split(",");
+        String[] estilosVentana = PropertiesClientUtil.getProperty("igu.configuracion.estilos.ventana").split(",");
         
         for(String estG : estilosVentana)
         {
-            String estGAux = AvadsMain.propC.getProperty("igu.configuracion.estilo."+estG);
+            String estGAux = PropertiesClientUtil.getProperty("igu.configuracion.estilo."+estG);
             estGAux = estGAux.substring(estGAux.lastIndexOf(".")+1);
             if(estiloVentana.compareTo(estGAux) == 0)
             {
-                imagenFondo = AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.jdiFondo.imagen.estilo."+estGAux));
+                imagenFondo = AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.jdiFondo.imagen.estilo."+estGAux));
                 break;
             }
         }

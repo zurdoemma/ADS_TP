@@ -8,8 +8,8 @@ package ar.edu.frc.utn.avads.igu;
 import ar.edu.frc.utn.avads.controller.impl.FileController;
 import ar.edu.frc.utn.avads.controller.impl.TaskRunController;
 import static ar.edu.frc.utn.avads.igu.VentanaPrincipal.vEstadoArchivos;
-import ar.edu.frc.utn.avads.main.AvadsMain;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,30 +32,30 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
         initComponents();
 
         padre = parent;
-        Image icono = AvadsUtil.getImageByPath(AvadsMain.propC.getProperty("icono.system.image"));
+        Image icono = AvadsUtil.getImageByPath(PropertiesClientUtil.getProperty("icono.system.image"));
         this.setIconImage(icono);
         
-        this.setTitle(AvadsMain.propC.getProperty("igu.configuracion.title")); 
+        this.setTitle(PropertiesClientUtil.getProperty("igu.configuracion.title")); 
         
-        jPanelParametrosGenerales.setBorder(javax.swing.BorderFactory.createTitledBorder(AvadsMain.propC.getProperty("igu.examinarArchivos.panelParametrosGenerales.title")));
-        jPanelArchivosExaminar.setBorder(javax.swing.BorderFactory.createTitledBorder(AvadsMain.propC.getProperty("igu.examinarArchivos.panelSeleccionArchivos.title")));
+        jPanelParametrosGenerales.setBorder(javax.swing.BorderFactory.createTitledBorder(PropertiesClientUtil.getProperty("igu.examinarArchivos.panelParametrosGenerales.title")));
+        jPanelArchivosExaminar.setBorder(javax.swing.BorderFactory.createTitledBorder(PropertiesClientUtil.getProperty("igu.examinarArchivos.panelSeleccionArchivos.title")));
         
-        jLabelCantidadArchivos.setText(AvadsMain.propC.getProperty("igu.examinarArchivos.cantidadArchivos"));
-        jLabelGuardarReporte.setText(AvadsMain.propC.getProperty("igu.examinarArchivos.guardarReporte"));
+        jLabelCantidadArchivos.setText(PropertiesClientUtil.getProperty("igu.examinarArchivos.cantidadArchivos"));
+        jLabelGuardarReporte.setText(PropertiesClientUtil.getProperty("igu.examinarArchivos.guardarReporte"));
         
-        jRadioButtonNO.setText(AvadsMain.propC.getProperty("igu.examinarArchivos.guardarReporte.NO"));
-        jRadioButtonSI.setText(AvadsMain.propC.getProperty("igu.examinarArchivos.guardarReporte.SI"));
+        jRadioButtonNO.setText(PropertiesClientUtil.getProperty("igu.examinarArchivos.guardarReporte.NO"));
+        jRadioButtonSI.setText(PropertiesClientUtil.getProperty("igu.examinarArchivos.guardarReporte.SI"));
         
-        jButtonEjecutar.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.examinarArchivos.imagen.boton.ejecutar")));
-        jButtonEjecutar.setToolTipText(AvadsMain.propC.getProperty("igu.examinarArchivos.boton.ejecutar"));
-        jButtonCancelar.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.configuracion.imagen.boton.cancelar")));
-        jButtonCancelar.setToolTipText(AvadsMain.propC.getProperty("igu.configuracion.boton.cancelar"));
+        jButtonEjecutar.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.examinarArchivos.imagen.boton.ejecutar")));
+        jButtonEjecutar.setToolTipText(PropertiesClientUtil.getProperty("igu.examinarArchivos.boton.ejecutar"));
+        jButtonCancelar.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.configuracion.imagen.boton.cancelar")));
+        jButtonCancelar.setToolTipText(PropertiesClientUtil.getProperty("igu.configuracion.boton.cancelar"));
 
-        String[] cantidadArchivos = AvadsMain.propC.getProperty("igu.examinarArchivos.cantidadArchivos.numero").split(",");
+        String[] cantidadArchivos = PropertiesClientUtil.getProperty("igu.examinarArchivos.cantidadArchivos.numero").split(",");
         for(String cantArch : cantidadArchivos) jComboBoxCantidadArchivos.addItem(cantArch);
         
         jFileChooserArchivo.setFileSelectionMode(jFileChooserArchivo.FILES_ONLY);
-        jFileChooserArchivo.setDialogTitle(AvadsMain.propC.getProperty("igu.examinarArchivos.seleccionarArchivo.title"));
+        jFileChooserArchivo.setDialogTitle(PropertiesClientUtil.getProperty("igu.examinarArchivos.seleccionarArchivo.title"));
         jFileChooserArchivo.setMultiSelectionEnabled(false);
         
         fileControler = new FileController(null);
@@ -371,7 +371,7 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
             {
                 if(jTextFieldArchivo1.getText().isEmpty()) 
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 }
                 archivosAnalizar[0] = jTextFieldArchivo1.getText();
@@ -380,12 +380,12 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
             {
                 if(jTextFieldArchivo1.getText().isEmpty())
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 }
                 if(jTextFieldArchivo2.getText().isEmpty()) 
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 }
                 archivosAnalizar[0] = jTextFieldArchivo1.getText();
@@ -395,17 +395,17 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
             {
                 if(jTextFieldArchivo1.getText().isEmpty())
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 }
                 if(jTextFieldArchivo2.getText().isEmpty()) 
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 }
                 if(jTextFieldArchivo3.getText().isEmpty()) 
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 } 
                 archivosAnalizar[0] = jTextFieldArchivo1.getText();
@@ -416,22 +416,22 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
             {
                 if(jTextFieldArchivo1.getText().isEmpty())
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 }
                 if(jTextFieldArchivo2.getText().isEmpty()) 
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 }
                 if(jTextFieldArchivo3.getText().isEmpty()) 
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 } 
                 if(jTextFieldArchivo4.getText().isEmpty()) 
                 {
-                    mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
+                    mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.eleccion.archivo"));
                     return;
                 }
                 archivosAnalizar[0] = jTextFieldArchivo1.getText();
@@ -442,13 +442,13 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
         }
         else return;
 
-        mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.espera"));
+        mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.espera"));
         
         TaskRunController taskA = new TaskRunController(archivosAnalizar);
         taskA.start();
         
         try {
-            Thread.sleep((Long.parseLong(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.espera.tiempo")))*1000);
+            Thread.sleep((Long.parseLong(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.espera.tiempo")))*1000);
         } catch (InterruptedException ex) {
             Logger.getLogger(VentanaExaminarArchivo.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -471,9 +471,9 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
         if(fileControler.esEjecutable())
         {
             if(fileControler.isSizeAccepted()) jTextFieldArchivo1.setText(jFileChooserArchivo.getSelectedFile().getAbsolutePath());
-            else mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.tamanoArchivo")+AvadsMain.propC.getProperty("igu.examinarArchivos.revision.tamano")+" MB");
+            else mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.tamanoArchivo")+PropertiesClientUtil.getProperty("igu.examinarArchivos.revision.tamano")+" MB");
         }
-        else mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.archivoNoEjecutable"));
+        else mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.archivoNoEjecutable"));
         
     }
   
@@ -485,7 +485,7 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
     {
         fileControler.setFileAnalizar(jFileChooserArchivo.getSelectedFile());
         if(fileControler.esEjecutable())jTextFieldArchivo2.setText(jFileChooserArchivo.getSelectedFile().getAbsolutePath());
-        else mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.archivoNoEjecutable"));
+        else mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.archivoNoEjecutable"));
     }
     }//GEN-LAST:event_jButtonSeleccionArchivo2ActionPerformed
 
@@ -495,7 +495,7 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
     {
         fileControler.setFileAnalizar(jFileChooserArchivo.getSelectedFile());
         if(fileControler.esEjecutable())jTextFieldArchivo3.setText(jFileChooserArchivo.getSelectedFile().getAbsolutePath());
-        else mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.archivoNoEjecutable"));
+        else mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.archivoNoEjecutable"));
     }
     }//GEN-LAST:event_jButtonSeleccionArchivo3ActionPerformed
 
@@ -505,13 +505,13 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
     {
         fileControler.setFileAnalizar(jFileChooserArchivo.getSelectedFile());
         if(fileControler.esEjecutable())jTextFieldArchivo4.setText(jFileChooserArchivo.getSelectedFile().getAbsolutePath());
-        else mostrarMensaje(AvadsMain.propC.getProperty("igu.examinarArchivos.mensaje.archivoNoEjecutable"));
+        else mostrarMensaje(PropertiesClientUtil.getProperty("igu.examinarArchivos.mensaje.archivoNoEjecutable"));
     }
     }//GEN-LAST:event_jButtonSeleccionArchivo4ActionPerformed
 
     private void mostrarMensaje(String mensaje)
     {
-        JOptionPane.showMessageDialog(this, mensaje, AvadsMain.propC.getProperty("ventana.dialogo.atencion"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, mensaje, PropertiesClientUtil.getProperty("ventana.dialogo.atencion"), JOptionPane.INFORMATION_MESSAGE);
     }  
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

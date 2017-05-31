@@ -6,7 +6,7 @@
 package ar.edu.frc.utn.avads.controller.impl;
 
 import ar.edu.frc.utn.avads.controller.AnalisisVirus;
-import ar.edu.frc.utn.avads.main.AvadsMain;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +32,7 @@ public class TaskRunController extends Thread {
         while(cantidadArchivosEnProceso > 0)
         {
             try {
-                Thread.sleep(Long.parseLong(AvadsMain.propC.getProperty("task.run.time.sleep").toString())*(1000*60));
+                Thread.sleep(Long.parseLong(PropertiesClientUtil.getProperty("task.run.time.sleep").toString())*(1000*60));
             } catch (InterruptedException ex) {
                 Logger.getLogger(TaskRunController.class.getName()).log(Level.SEVERE, null, ex);
             }

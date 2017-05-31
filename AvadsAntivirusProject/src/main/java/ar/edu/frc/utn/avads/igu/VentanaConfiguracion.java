@@ -5,16 +5,10 @@
  */
 package ar.edu.frc.utn.avads.igu;
 
-import ar.edu.frc.utn.avads.main.AvadsMain;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -33,19 +27,19 @@ public class VentanaConfiguracion extends javax.swing.JDialog {
         initComponents();
 
         padre = parent;
-        Image icono = AvadsUtil.getImageByPath(AvadsMain.propC.getProperty("icono.system.image"));
+        Image icono = AvadsUtil.getImageByPath(PropertiesClientUtil.getProperty("icono.system.image"));
         this.setIconImage(icono);
         
-        this.setTitle(AvadsMain.propC.getProperty("igu.configuracion.title")); 
+        this.setTitle(PropertiesClientUtil.getProperty("igu.configuracion.title")); 
         
-        jPanelSeleccionEstilio.setBorder(javax.swing.BorderFactory.createTitledBorder(AvadsMain.propC.getProperty("igu.configuracion.panelEstilos.title")));
+        jPanelSeleccionEstilio.setBorder(javax.swing.BorderFactory.createTitledBorder(PropertiesClientUtil.getProperty("igu.configuracion.panelEstilos.title")));
         
-        jButtonGuardar.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.configuracion.imagen.boton.guardar")));
-        jButtonGuardar.setToolTipText(AvadsMain.propC.getProperty("igu.configuracion.boton.guardar"));
-        jButtonCancelar.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.configuracion.imagen.boton.cancelar")));
-        jButtonCancelar.setToolTipText(AvadsMain.propC.getProperty("igu.configuracion.boton.cancelar"));
+        jButtonGuardar.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.configuracion.imagen.boton.guardar")));
+        jButtonGuardar.setToolTipText(PropertiesClientUtil.getProperty("igu.configuracion.boton.guardar"));
+        jButtonCancelar.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.configuracion.imagen.boton.cancelar")));
+        jButtonCancelar.setToolTipText(PropertiesClientUtil.getProperty("igu.configuracion.boton.cancelar"));
         
-        String[] estilosVentana = AvadsMain.propC.getProperty("igu.configuracion.estilos.ventana").split(",");
+        String[] estilosVentana = PropertiesClientUtil.getProperty("igu.configuracion.estilos.ventana").split(",");
         for(String estilo : estilosVentana) jComboBoxEstiloVentana.addItem(estilo);
     }
 
@@ -143,7 +137,7 @@ public class VentanaConfiguracion extends javax.swing.JDialog {
         String estiloSel = String.valueOf(jComboBoxEstiloVentana.getSelectedItem());
         if(estiloSel.compareTo("WindowsLookAndFeel") == 0)
         {
-            mostrarMensaje(AvadsMain.propC.getProperty("igu.configuracion.estilo.mensaje"));
+            mostrarMensaje(PropertiesClientUtil.getProperty("igu.configuracion.estilo.mensaje"));
             return;
         }
         else
@@ -165,27 +159,13 @@ public class VentanaConfiguracion extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-        AvadsMain.propC.setProperty("estilo.ventana", AvadsMain.propC.getProperty("igu.configuracion.estilo."+String.valueOf(jComboBoxEstiloVentana.getSelectedItem())));
-        
-        OutputStream output = null;
-        try {
-            output = new FileOutputStream("ApplicationResources_es.properties");
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(VentanaConfiguracion.class.getName()).log(Level.SEVERE, null, ex);
-        }        
-        try {
-            AvadsMain.propC.store(output, null);
-            output.close();        
-        } catch (IOException ex) {
-            Logger.getLogger(VentanaConfiguracion.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        mostrarMensaje(AvadsMain.propC.getProperty("igu.configuracion.mensaje.guardar.ok"));        
+        PropertiesClientUtil.setProperty("estilo.ventana", PropertiesClientUtil.getProperty("igu.configuracion.estilo."+String.valueOf(jComboBoxEstiloVentana.getSelectedItem())));        
+        mostrarMensaje(PropertiesClientUtil.getProperty("igu.configuracion.mensaje.guardar.ok"));        
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
     private void mostrarMensaje(String mensaje)
     {
-        JOptionPane.showMessageDialog(this, mensaje, AvadsMain.propC.getProperty("ventana.dialogo.atencion"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, mensaje, PropertiesClientUtil.getProperty("ventana.dialogo.atencion"), JOptionPane.INFORMATION_MESSAGE);
     }    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelar;

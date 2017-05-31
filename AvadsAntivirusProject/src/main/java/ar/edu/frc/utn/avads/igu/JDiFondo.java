@@ -10,7 +10,7 @@
  */
 package ar.edu.frc.utn.avads.igu;
 
-import ar.edu.frc.utn.avads.main.AvadsMain;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.awt.BorderLayout;
 
 /**
@@ -24,7 +24,7 @@ public class JDiFondo extends javax.swing.JDialog {
         super(parent, modal);        
         initComponents();                
         
-        this.setTitle(AvadsMain.propC.getProperty("igu.jdiFondo.title") +": "+ estiloSel);
+        this.setTitle(PropertiesClientUtil.getProperty("igu.jdiFondo.title") +": "+ estiloSel);
     }
     
     public void configurar(String estiloSel){

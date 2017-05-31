@@ -5,7 +5,7 @@
  */
 package ar.edu.frc.utn.avads.controller.impl;
 
-import ar.edu.frc.utn.avads.main.AvadsMain;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.io.File;
 import java.nio.file.Files;
 
@@ -35,10 +35,10 @@ public class FileController {
         
         if(resul)
         {
-            if(AvadsMain.propC.getProperty("igu.examinarArchivos.revision.extensiones").compareTo("1") == 0)
+            if(PropertiesClientUtil.getProperty("igu.examinarArchivos.revision.extensiones").compareTo("1") == 0)
             {
                 resul = false;
-                String[] extensionesAc = AvadsMain.propC.getProperty("igu.examinarArchivos.revision.extensiones.aceptadas").split(",");
+                String[] extensionesAc = PropertiesClientUtil.getProperty("igu.examinarArchivos.revision.extensiones.aceptadas").split(",");
                 String extArchivoSel = fileAnalizar.getName().substring(fileAnalizar.getName().lastIndexOf(".")+1).toLowerCase();
                 for(String extA : extensionesAc)
                 {
@@ -57,7 +57,7 @@ public class FileController {
     public boolean isSizeAccepted()
     {
         Long fileSize = (fileAnalizar.length()/(1024*1024));
-        Long fileSizeP = Long.parseLong(AvadsMain.propC.getProperty("igu.examinarArchivos.revision.tamano"));
+        Long fileSizeP = Long.parseLong(PropertiesClientUtil.getProperty("igu.examinarArchivos.revision.tamano"));
         
         if(fileSize > fileSizeP) return false;
         else return true;

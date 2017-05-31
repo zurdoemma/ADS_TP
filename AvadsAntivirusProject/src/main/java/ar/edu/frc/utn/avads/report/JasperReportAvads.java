@@ -6,6 +6,7 @@ import ar.edu.frc.utn.avads.model.ReporteAnalisisArchivo;
 import ar.edu.frc.utn.avads.model.ReporteAntiVirus;
 import ar.edu.frc.utn.avads.model.ResultadoAnalisis;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -42,10 +43,10 @@ public class JasperReportAvads
 
             JasperReport masterReport = (JasperReport) JRLoader.loadObject(file);
 
-            java.awt.Image imagen = AvadsUtil.getImageByPath(AvadsMain.propC.getProperty("icono.system.image"));
+            java.awt.Image imagen = AvadsUtil.getImageByPath(PropertiesClientUtil.getProperty("icono.system.image"));
 
             File fileImagen = null;
-            URL resource = JasperReportAvads.class.getResource(AvadsMain.propC.getProperty("igu.estadoArchivos.imagen.reporte.analisis.archivo"));
+            URL resource = JasperReportAvads.class.getResource(PropertiesClientUtil.getProperty("igu.estadoArchivos.imagen.reporte.analisis.archivo"));
             try {
                 fileImagen = Paths.get(resource.toURI()).toFile();
             } catch (URISyntaxException ex) {
@@ -56,7 +57,7 @@ public class JasperReportAvads
             jasperPrint = JasperFillManager.fillReport(masterReport, parametros, new JREmptyDataSource());
 
             JasperViewer jviewer = new JasperViewer(jasperPrint, false);
-            jviewer.setTitle(AvadsMain.propC.getProperty("igu.estadoArchivos.title.reporte.analisis.archivo"));
+            jviewer.setTitle(PropertiesClientUtil.getProperty("igu.estadoArchivos.title.reporte.analisis.archivo"));
 
             jviewer.setIconImage(imagen);
             jviewer.setVisible(true);
@@ -64,7 +65,7 @@ public class JasperReportAvads
         }
         catch (JRException e)
         {
-            System.out.println(AvadsMain.propC.get("report.error.carga.maestro") + " " + e.getMessage());
+            System.out.println(PropertiesClientUtil.getProperty("report.error.carga.maestro") + " " + e.getMessage());
         }            
     }
     
@@ -104,7 +105,7 @@ public class JasperReportAvads
             query.put("fecha", AvadsUtil.getDate(resultAnalisis.getFechaEnvio())+" "+AvadsUtil.getHour(resultAnalisis.getFechaEnvio()));
             Collections.sort(reportAnalisisArchivo.getReportesAntiVirus());
             query.put("listaAnalisis", reportAnalisisArchivo.getReportesAntiVirus());
-            runReporteAnalisisArchivo(query,AvadsMain.propC.getProperty("igu.estadoArchivos.ruta.reporte.analisis.archivo"));
+            runReporteAnalisisArchivo(query,PropertiesClientUtil.getProperty("igu.estadoArchivos.ruta.reporte.analisis.archivo"));
         }
     }
     

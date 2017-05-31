@@ -7,6 +7,7 @@ package ar.edu.frc.utn.avads.igu;
 
 import ar.edu.frc.utn.avads.main.AvadsMain;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.awt.Image;
 import javax.swing.JOptionPane;
 
@@ -27,31 +28,31 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public VentanaPrincipal() {
         initComponents();
         
-        Image icono = AvadsUtil.getImageByPath(AvadsMain.propC.getProperty("icono.system.image"));
+        Image icono = AvadsUtil.getImageByPath(PropertiesClientUtil.getProperty("icono.system.image"));
         this.setIconImage(icono);
         
-        this.setTitle(AvadsMain.propC.getProperty("igu.principal.title"));
+        this.setTitle(PropertiesClientUtil.getProperty("igu.principal.title"));
         
-        Image imagen = AvadsUtil.getImageByPath(AvadsMain.propC.getProperty("igu.principal.imagen.fondo"));        
+        Image imagen = AvadsUtil.getImageByPath(PropertiesClientUtil.getProperty("igu.principal.imagen.fondo"));        
         this.getContentPane().add(new PanelFondo(imagen), "Center");
         this.setExtendedState(MAXIMIZED_BOTH);
         
-        jMenuAcciones.setText(AvadsMain.propC.getProperty("igu.menu.acciones"));      
-        jMenuAyuda.setText(AvadsMain.propC.getProperty("igu.menu.ayuda"));
-        jMenuConfiguracion.setText(AvadsMain.propC.getProperty("igu.menu.configuracion"));
-        jMenuItemExaminarArchivo.setText(AvadsMain.propC.getProperty("igu.menu.acciones.examinarArchivo"));
-        jMenuItemSalir.setText(AvadsMain.propC.getProperty("igu.menu.acciones.salir"));
-        jMenuItemAyuda.setText(AvadsMain.propC.getProperty("igu.menu.ayuda.ayuda"));
-        jMenuItemAcerca.setText(AvadsMain.propC.getProperty("igu.menu.ayuda.acercaAVADS"));
-        jMenuItemConfiguracion.setText(AvadsMain.propC.getProperty("igu.menu.configuracion.configuracion"));
-        jMenuItemEstadoArchivos.setText(AvadsMain.propC.getProperty("igu.menu.acciones.estadoArchivos"));
+        jMenuAcciones.setText(PropertiesClientUtil.getProperty("igu.menu.acciones"));      
+        jMenuAyuda.setText(PropertiesClientUtil.getProperty("igu.menu.ayuda"));
+        jMenuConfiguracion.setText(PropertiesClientUtil.getProperty("igu.menu.configuracion"));
+        jMenuItemExaminarArchivo.setText(PropertiesClientUtil.getProperty("igu.menu.acciones.examinarArchivo"));
+        jMenuItemSalir.setText(PropertiesClientUtil.getProperty("igu.menu.acciones.salir"));
+        jMenuItemAyuda.setText(PropertiesClientUtil.getProperty("igu.menu.ayuda.ayuda"));
+        jMenuItemAcerca.setText(PropertiesClientUtil.getProperty("igu.menu.ayuda.acercaAVADS"));
+        jMenuItemConfiguracion.setText(PropertiesClientUtil.getProperty("igu.menu.configuracion.configuracion"));
+        jMenuItemEstadoArchivos.setText(PropertiesClientUtil.getProperty("igu.menu.acciones.estadoArchivos"));
         
-        jMenuItemAcerca.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.principal.imagen.acerca")));
-        jMenuItemSalir.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.principal.imagen.salir")));
-        jMenuItemAyuda.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.principal.imagen.ayuda")));
-        jMenuItemExaminarArchivo.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.principal.imagen.examinarArchivo")));
-        jMenuItemConfiguracion.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.principal.imagen.configuracion")));
-        jMenuItemEstadoArchivos.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.principal.imagen.estadoArchivos")));
+        jMenuItemAcerca.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.principal.imagen.acerca")));
+        jMenuItemSalir.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.principal.imagen.salir")));
+        jMenuItemAyuda.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.principal.imagen.ayuda")));
+        jMenuItemExaminarArchivo.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.principal.imagen.examinarArchivo")));
+        jMenuItemConfiguracion.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.principal.imagen.configuracion")));
+        jMenuItemEstadoArchivos.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.principal.imagen.estadoArchivos")));
     }
 
     /**
@@ -144,7 +145,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void jMenuItemSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSalirActionPerformed
 
-        int resp = JOptionPane.showConfirmDialog(this, AvadsMain.propC.getProperty("principal.pregunta.salir"), AvadsMain.propC.getProperty("ventana.dialogo.atencion"), JOptionPane.YES_NO_OPTION);
+        int resp = JOptionPane.showConfirmDialog(this, PropertiesClientUtil.getProperty("principal.pregunta.salir"), 
+                PropertiesClientUtil.getProperty("ventana.dialogo.atencion"), JOptionPane.YES_NO_OPTION);
         if(resp == JOptionPane.YES_OPTION)
         {
             AvadsMain.tray.remove(AvadsMain.trayIcon);

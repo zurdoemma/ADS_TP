@@ -5,9 +5,9 @@
  */
 package ar.edu.frc.utn.avads.igu;
 
-import ar.edu.frc.utn.avads.main.AvadsMain;
 import ar.edu.frc.utn.avads.model.AnalisisArchivo;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.awt.Image;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -30,16 +30,16 @@ public class VentanaEstadoArchivos extends javax.swing.JDialog {
         initComponents();
         
         padre = parent;
-        Image icono = AvadsUtil.getImageByPath(AvadsMain.propC.getProperty("icono.system.image"));
+        Image icono = AvadsUtil.getImageByPath(PropertiesClientUtil.getProperty("icono.system.image"));
         this.setIconImage(icono);
         
-        this.setTitle(AvadsMain.propC.getProperty("igu.estadoArchivos.title"));
+        this.setTitle(PropertiesClientUtil.getProperty("igu.estadoArchivos.title"));
         
-        jPanelEstadoArchivos.setBorder(javax.swing.BorderFactory.createTitledBorder(AvadsMain.propC.getProperty("igu.estadoArchivos.panelEstadoArchivos.title")));
-        jPanelFiltroEstadoArchivos.setBorder(javax.swing.BorderFactory.createTitledBorder(AvadsMain.propC.getProperty("igu.estadoArchivos.panelFiltroEstadoArchivos.title")));
+        jPanelEstadoArchivos.setBorder(javax.swing.BorderFactory.createTitledBorder(PropertiesClientUtil.getProperty("igu.estadoArchivos.panelEstadoArchivos.title")));
+        jPanelFiltroEstadoArchivos.setBorder(javax.swing.BorderFactory.createTitledBorder(PropertiesClientUtil.getProperty("igu.estadoArchivos.panelFiltroEstadoArchivos.title")));
         
-        jLabelFecha.setText(AvadsMain.propC.getProperty("igu.estadoArchivos.fecha"));
-        jButtonVer.setText(AvadsMain.propC.getProperty("igu.estadoArchivos.boton.ver"));
+        jLabelFecha.setText(PropertiesClientUtil.getProperty("igu.estadoArchivos.fecha"));
+        jButtonVer.setText(PropertiesClientUtil.getProperty("igu.estadoArchivos.boton.ver"));
         
 
         jTableEstadoArchivos.setModel(new javax.swing.table.DefaultTableModel(
@@ -47,7 +47,8 @@ public class VentanaEstadoArchivos extends javax.swing.JDialog {
 
             },
             new String [] {
-                AvadsMain.propC.getProperty("igu.estadoArchivos.columna.fecha"), AvadsMain.propC.getProperty("igu.estadoArchivos.columna.idProceso"), AvadsMain.propC.getProperty("igu.estadoArchivos.columna.archivosEnProceso"), AvadsMain.propC.getProperty("igu.estadoArchivos.columna.estado")
+                PropertiesClientUtil.getProperty("igu.estadoArchivos.columna.fecha"), PropertiesClientUtil.getProperty("igu.estadoArchivos.columna.idProceso"), 
+                PropertiesClientUtil.getProperty("igu.estadoArchivos.columna.archivosEnProceso"), PropertiesClientUtil.getProperty("igu.estadoArchivos.columna.estado")
             }
         ) {
             Class[] types = new Class [] {

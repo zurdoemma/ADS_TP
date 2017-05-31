@@ -10,6 +10,7 @@ import ar.edu.frc.utn.avads.model.AnalisisArchivo;
 import ar.edu.frc.utn.avads.model.ExaminarArchivo;
 import ar.edu.frc.utn.avads.report.JasperReportAvads;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
+import ar.edu.frc.utn.avads.util.PropertiesClientUtil;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -33,26 +34,27 @@ public class VentanaEstadoAnalisis extends javax.swing.JFrame {
     public VentanaEstadoAnalisis() {
         initComponents();
         
-        Image icono = AvadsUtil.getImageByPath(AvadsMain.propC.getProperty("icono.system.image"));
+        Image icono = AvadsUtil.getImageByPath(PropertiesClientUtil.getProperty("icono.system.image"));
         this.setIconImage(icono);
         
-        this.setTitle(AvadsMain.propC.getProperty("igu.estadoArchivos.title"));
+        this.setTitle(PropertiesClientUtil.getProperty("igu.estadoArchivos.title"));
         
-        jPanelEstadoArchivos.setBorder(javax.swing.BorderFactory.createTitledBorder(AvadsMain.propC.getProperty("igu.estadoArchivos.panelEstadoArchivos.title")));
-        jPanelFiltroEstadoArchivos.setBorder(javax.swing.BorderFactory.createTitledBorder(AvadsMain.propC.getProperty("igu.estadoArchivos.panelFiltroEstadoArchivos.title")));
+        jPanelEstadoArchivos.setBorder(javax.swing.BorderFactory.createTitledBorder(PropertiesClientUtil.getProperty("igu.estadoArchivos.panelEstadoArchivos.title")));
+        jPanelFiltroEstadoArchivos.setBorder(javax.swing.BorderFactory.createTitledBorder(PropertiesClientUtil.getProperty("igu.estadoArchivos.panelFiltroEstadoArchivos.title")));
         
-        jLabelFecha.setText(AvadsMain.propC.getProperty("igu.estadoArchivos.fecha"));
-        jButtonVer.setText(AvadsMain.propC.getProperty("igu.estadoArchivos.boton.ver"));
+        jLabelFecha.setText(PropertiesClientUtil.getProperty("igu.estadoArchivos.fecha"));
+        jButtonVer.setText(PropertiesClientUtil.getProperty("igu.estadoArchivos.boton.ver"));
         
-        jButtonVerReporte.setIcon(AvadsUtil.getImageIconByPath(AvadsMain.propC.getProperty("igu.estadoArchivos.imagen.boton.ver.reporte.analisis.archivo")));
-        jButtonVerReporte.setToolTipText(AvadsMain.propC.getProperty("igu.estadoArchivos.boton.ver.estadoArchivos"));
+        jButtonVerReporte.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.estadoArchivos.imagen.boton.ver.reporte.analisis.archivo")));
+        jButtonVerReporte.setToolTipText(PropertiesClientUtil.getProperty("igu.estadoArchivos.boton.ver.estadoArchivos"));
         
         jTableEstadoArchivos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                AvadsMain.propC.getProperty("igu.estadoArchivos.columna.fecha"), AvadsMain.propC.getProperty("igu.estadoArchivos.columna.idProceso"), AvadsMain.propC.getProperty("igu.estadoArchivos.columna.archivosEnProceso"), AvadsMain.propC.getProperty("igu.estadoArchivos.columna.estado")
+                PropertiesClientUtil.getProperty("igu.estadoArchivos.columna.fecha"), PropertiesClientUtil.getProperty("igu.estadoArchivos.columna.idProceso"), 
+                PropertiesClientUtil.getProperty("igu.estadoArchivos.columna.archivosEnProceso"), PropertiesClientUtil.getProperty("igu.estadoArchivos.columna.estado")
             }
         ) {
             Class[] types = new Class [] {
@@ -91,7 +93,7 @@ public class VentanaEstadoAnalisis extends javax.swing.JFrame {
         TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(estadoArchivosModel);
         jTableEstadoArchivos.setRowSorter(elQueOrdena);      
         
-        jXDatePickerFechaEjecucion.setFormats(AvadsMain.propC.getProperty("igu.estadoArchivos.fecha.formato"));
+        jXDatePickerFechaEjecucion.setFormats(PropertiesClientUtil.getProperty("igu.estadoArchivos.fecha.formato"));
         
         List<String> examArch = AvadsMain.serviceDB.getAllCollection("Examinar_Archivo");
 
@@ -248,11 +250,11 @@ public class VentanaEstadoAnalisis extends javax.swing.JFrame {
                 JasperReportAvads mostrarReporte = new JasperReportAvads();
                 mostrarReporte.mostrarReporte(Long.parseLong(idProceso), archivo);
             }
-            else mostrarMensaje(AvadsMain.propC.getProperty("igu.estadoArchivos.tabla.estado.archivo"));
+            else mostrarMensaje(PropertiesClientUtil.getProperty("igu.estadoArchivos.tabla.estado.archivo"));
         }
-        else mostrarMensaje(AvadsMain.propC.getProperty("igu.estadoArchivos.tabla.seleccion.archivo"));
+        else mostrarMensaje(PropertiesClientUtil.getProperty("igu.estadoArchivos.tabla.seleccion.archivo"));
     }
-    else mostrarMensaje(AvadsMain.propC.getProperty("igu.estadoArchivos.tabla.sinArchivos"));
+    else mostrarMensaje(PropertiesClientUtil.getProperty("igu.estadoArchivos.tabla.sinArchivos"));
         
             
     }//GEN-LAST:event_jButtonVerReporteActionPerformed
@@ -294,7 +296,7 @@ public class VentanaEstadoAnalisis extends javax.swing.JFrame {
     
     private void mostrarMensaje(String mensaje)
     {
-        JOptionPane.showMessageDialog(this, mensaje, AvadsMain.propC.getProperty("ventana.dialogo.atencion"), JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, mensaje, PropertiesClientUtil.getProperty("ventana.dialogo.atencion"), JOptionPane.INFORMATION_MESSAGE);
     }     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
