@@ -1,5 +1,8 @@
 package ar.edu.frc.utn.avads.restservice.impl;
 
+import ar.edu.frc.utn.avads.db.service.DBService;
+import ar.edu.frc.utn.avads.db.service.impl.DBServiceMongoImpl;
+import ar.edu.frc.utn.avads.model.FileScanned;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,14 +23,20 @@ import javax.ws.rs.core.UriInfo;
 import ar.edu.frc.utn.avads.restservice.FileScanRestService;
 import ar.edu.frc.utn.avads.scan.service.FileScanService;
 import ar.edu.frc.utn.avads.scan.service.impl.VirusTotalFileScanServiceImpl;
+import ar.edu.frc.utn.avads.util.AvadsUtil;
+import ar.edu.frc.utn.avads.util.PropertiesServerUtil;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +56,7 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 	private UriInfo context;
 
 	@POST
-    @Path("scan")
+        @Path("scan")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response fileScan(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
@@ -55,6 +64,17 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 		// check if all form parameters are provided
 		if (uploadedInputStream == null || fileDetail == null)
 			return Response.status(400).entity("Invalid form data").build();
+                
+                DBService dbConn = new DBServiceMongoImpl();
+                dbConn.startDB(PropertiesServerUtil.getProperty("db.mongo.user"), PropertiesServerUtil.getProperty("db.mongo.pwd"), 
+                PropertiesServerUtil.getProperty("db.mongo.url"), PropertiesServerUtil.getProperty("db.mongo.puerto"),
+                PropertiesServerUtil.getProperty("db.mongo.nombre.db"));
+                
+                // check if file procesed
+                boolean fileProcesed = isFileProcesed(uploadedInputStream, dbConn, null);
+                if(fileProcesed == true) return Response.status(200)
+				.entity("File scanned").build();
+                
 		// create our destination folder, if it not exists
 		try {
 			createFolderIfNotExists(UPLOAD_FOLDER);
@@ -64,23 +84,66 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 					.build();
 		}
 		String uploadedFileLocation = UPLOAD_FOLDER + fileDetail.getFileName();
+                File fileToProcess = null;
 		try {
-			saveToFile(uploadedInputStream, uploadedFileLocation);
+			fileToProcess = saveToFile(uploadedInputStream, uploadedFileLocation);
 		} catch (IOException e) {
 			return Response.status(500).entity("Can not save file").build();
 		}
-		//String jsonResponse = fileScanService.fileReportJSON("");
-		//System.out.println("jsonResponse" + jsonResponse);
-		return Response.status(200)
-				.entity("File saved to " + uploadedFileLocation).build();
+		
+                String jsonResponse = fileScanService.scanFileJSON(fileToProcess);
+		System.out.println("jsonResponse" + jsonResponse);
+		return Response.status(200).entity(jsonResponse).build();
 	}
 
 	@GET
-    @Path("report/{scanId}")
-    @Produces(MediaType.APPLICATION_JSON)
+        @Path("report/{scanId}")
+        @Produces(MediaType.APPLICATION_JSON)
 	public Response fileReport(@PathParam("scanId") String scanId) {
-		String jsonResponse = fileScanService.fileReportJSON(scanId);
-		return Response.status(200).entity(jsonResponse).build();
+                
+                DBService dbConn = new DBServiceMongoImpl();
+                String jsonResponse = null;
+                
+                // check if file procesed
+                boolean fileProcesed = isFileProcesed(null, dbConn, scanId);
+                if(fileProcesed == true)
+                {
+                    List<String> searchFile = dbConn.findObjectCollection("Files_Scanned", "reporteScaneo", scanId);
+                    for(String sFile : searchFile) 
+                    {
+                        FileScanned fileScan = (FileScanned) AvadsUtil.gson.fromJson(sFile, FileScanned.class);
+                        
+                        if(fileScan == null)
+                        {
+                            fileProcesed = false;
+                            break;
+                        }
+                        else if(validDateToExpirationReport(fileScan.getFechaVencimiento()))
+                        {
+                            dbConn.removeObjectCollection("Files_Scanned", "reporteScaneo", scanId);
+                            fileProcesed = false;
+                            break;
+                        }
+                            
+                        jsonResponse = fileScan.getReporteScaneo();
+                    }
+                    if(searchFile.isEmpty()) fileProcesed = false;
+                }
+                
+                if(fileProcesed == false)
+                {
+                    jsonResponse = fileScanService.fileReportJSON(scanId);
+                    
+                    Map<String, Object> search = new HashMap<String, Object>();
+                    search.put("scanId", scanId);
+
+            
+                    Map<String, Object> upVal = new HashMap<String, Object>();
+                    upVal.put("reporteScaneo", jsonResponse);
+                    dbConn.updateObjectCollection("Files_Scanned", search, upVal);
+                }
+                              
+                return Response.status(200).entity(jsonResponse).build();
 	}
 
 	private File saveToFile(InputStream inStream, String target)
@@ -106,18 +169,80 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 		}
 	}
         
-        private String CheckSumFile(InputStream fileStream)
+        private String calcHashFile(InputStream fileStream)
         {
             MessageDigest md = null;
             try {
-                md = MessageDigest.getInstance("MD5");
-                DigestInputStream dis = new DigestInputStream(fileStream, md);                
+                md = MessageDigest.getInstance("MD5");              
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(FileScanRestServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            byte[] digest = md.digest();             
-            return digest.toString();
+            //Create byte array to read data in chunks
+            byte[] byteArray = new byte[1024];
+            int bytesCount = 0; 
+
+            try {
+                //Read file data and update in message digest
+                while ((bytesCount = fileStream.read(byteArray)) != -1) {
+                    md.update(byteArray, 0, bytesCount);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(FileScanRestServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+;
+
+            try {
+                //close the stream; We don't need it now.
+                fileStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FileScanRestServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //Get the hash's bytes
+            byte[] bytes = md.digest();
+
+            //This bytes[] has bytes in decimal format;
+            //Convert it to hexadecimal format
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++)
+            {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+            //return complete hash
+            return sb.toString();
         }
+        
+        private boolean isFileProcesed(InputStream fileStream, DBService dbConn, String scanId)
+        {
+            if(scanId == null)
+            {
+                String hashFile = calcHashFile(fileStream);
+
+                List<String> searchFile = dbConn.findObjectCollection("Files_Scanned", "checkSum", hashFile);
+                for(String sFile : searchFile) return true;
+            }
+            else
+            {
+                List<String> searchFile = dbConn.findObjectCollection("Files_Scanned", "scanId", scanId);
+                for(String sFile : searchFile) return true;                
+            }
+                
+            return false;
+        }
+        
+        private boolean validDateToExpirationReport(String dateToExpirationReport)
+        {
+            SimpleDateFormat fecha = new SimpleDateFormat("dd-MM-yyyy");
+            try {
+                if(AvadsUtil.daysBetween(fecha.parse(dateToExpirationReport), new Date()) < 0) return false;
+            } catch (ParseException ex) {
+                Logger.getLogger(FileScanRestServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            return true;
+        }
+                
 
 }

@@ -12,18 +12,20 @@ import java.util.Objects;
  *
  * @author ecarballo
  */
-public class FilesScanned {
+public class FileScanned {
     
+    private String scanId;
     private String checkSum;
     private String nombreArchivo;
     private String fechaRegistro;
     private String fechaVencimiento;
     private String reporteScaneo;
 
-    public FilesScanned() {
+    public FileScanned() {
     }
 
-    public FilesScanned(String checkSum, String nombreArchivo, String fechaRegistro, String fechaVencimiento, String reporteScaneo) {
+    public FileScanned(String scanId, String checkSum, String nombreArchivo, String fechaRegistro, String fechaVencimiento, String reporteScaneo) {
+        this.scanId = scanId;
         this.checkSum = checkSum;
         this.nombreArchivo = nombreArchivo;
         this.fechaRegistro = fechaRegistro;
@@ -31,6 +33,15 @@ public class FilesScanned {
         this.reporteScaneo = reporteScaneo;
     }
 
+    public String getScanId() {
+        return scanId;
+    }
+
+    public void setScanId(String scanId) {
+        this.scanId = scanId;
+    }
+
+    
     public String getCheckSum() {
         return checkSum;
     }
@@ -79,13 +90,19 @@ public class FilesScanned {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FilesScanned other = (FilesScanned) obj;
+        final FileScanned other = (FileScanned) obj;
+        if (!Objects.equals(this.scanId, other.scanId)) {
+            return false;
+        }
         if (!Objects.equals(this.checkSum, other.checkSum)) {
             return false;
         }
@@ -104,15 +121,17 @@ public class FilesScanned {
         return true;
     }
 
+
+
     public String toJSON()
     {
         Gson gson = new Gson();
         return gson.toJson(this);
     }
-    
+
     @Override
     public String toString() {
-        return "FilesScanned{" + "checkSum=" + checkSum + ", nombreArchivo=" + nombreArchivo + ", fechaRegistro=" + fechaRegistro + ", fechaVencimiento=" + fechaVencimiento + ", reporteScaneo=" + reporteScaneo + '}';
+        return "FilesScanned{" + "scanId=" + scanId + ", checkSum=" + checkSum + ", nombreArchivo=" + nombreArchivo + ", fechaRegistro=" + fechaRegistro + ", fechaVencimiento=" + fechaVencimiento + ", reporteScaneo=" + reporteScaneo + '}';
     }
-    
+
 }
