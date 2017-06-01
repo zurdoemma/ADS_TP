@@ -57,7 +57,11 @@ public class AvadsUtil {
     {
 	return new File(AvadsUtil.class.getClassLoader().getResource(path).getFile());        
     }        
-            
+    
+    public static long daysBetween(Date one, Date two) { 
+        long difference = (one.getTime()-two.getTime())/86400000; 
+        return Math.abs(difference); 
+    }
     
     public static Image createImage(String path, String description) {
         URL imageURL = AvadsUtil.class.getResource(path);
