@@ -3,6 +3,7 @@ package ar.edu.frc.utn.avads.restservice.impl;
 import ar.edu.frc.utn.avads.db.service.DBService;
 import ar.edu.frc.utn.avads.db.service.impl.DBServiceMongoImpl;
 import ar.edu.frc.utn.avads.model.FileScanned;
+import ar.edu.frc.utn.avads.model.ResponseScanVirusTotal;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,10 +26,11 @@ import ar.edu.frc.utn.avads.scan.service.FileScanService;
 import ar.edu.frc.utn.avads.scan.service.impl.VirusTotalFileScanServiceImpl;
 import ar.edu.frc.utn.avads.util.AvadsUtil;
 import ar.edu.frc.utn.avads.util.PropertiesServerUtil;
+import com.google.gson.reflect.TypeToken;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
-import java.security.DigestInputStream;
+import java.lang.reflect.Type;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -69,7 +71,7 @@ public class FileScanRestServiceImpl implements FileScanRestService {
                 dbConn.startDB(PropertiesServerUtil.getProperty("db.mongo.user"), PropertiesServerUtil.getProperty("db.mongo.pwd"), 
                 PropertiesServerUtil.getProperty("db.mongo.url"), PropertiesServerUtil.getProperty("db.mongo.puerto"),
                 PropertiesServerUtil.getProperty("db.mongo.nombre.db"));
-                
+
                 // check if file procesed
                 boolean fileProcesed = isFileProcesed(uploadedInputStream, dbConn, null);
                 if(fileProcesed == true) return Response.status(200)
@@ -86,13 +88,16 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 		String uploadedFileLocation = UPLOAD_FOLDER + fileDetail.getFileName();
                 File fileToProcess = null;
 		try {
-			fileToProcess = saveToFile(uploadedInputStream, uploadedFileLocation);
+                        fileToProcess = saveToFile(uploadedInputStream, uploadedFileLocation);
 		} catch (IOException e) {
-			return Response.status(500).entity("Can not save file").build();
+                    System.out.println(e.getMessage());
+                    return Response.status(500).entity("Can not save file").build();
 		}
 		
                 String jsonResponse = fileScanService.scanFileJSON(fileToProcess);
 		System.out.println("jsonResponse" + jsonResponse);
+                processScannedFile(jsonResponse, dbConn, uploadedInputStream, fileDetail.getName());
+                
 		return Response.status(200).entity(jsonResponse).build();
 	}
 
@@ -102,6 +107,10 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 	public Response fileReport(@PathParam("scanId") String scanId) {
                 
                 DBService dbConn = new DBServiceMongoImpl();
+                dbConn.startDB(PropertiesServerUtil.getProperty("db.mongo.user"), PropertiesServerUtil.getProperty("db.mongo.pwd"), 
+                PropertiesServerUtil.getProperty("db.mongo.url"), PropertiesServerUtil.getProperty("db.mongo.puerto"),
+                PropertiesServerUtil.getProperty("db.mongo.nombre.db"));
+                
                 String jsonResponse = null;
                 
                 // check if file procesed
@@ -164,7 +173,7 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 	private void createFolderIfNotExists(String dirName)
 			throws SecurityException {
 		File theDir = new File(dirName);
-		if (!theDir.exists()) {
+                if (!theDir.exists()) {
 			theDir.mkdir();
 		}
 	}
@@ -190,7 +199,6 @@ public class FileScanRestServiceImpl implements FileScanRestService {
             } catch (IOException ex) {
                 Logger.getLogger(FileScanRestServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
-;
 
             try {
                 //close the stream; We don't need it now.
@@ -242,6 +250,23 @@ public class FileScanRestServiceImpl implements FileScanRestService {
             }
             
             return true;
+        }
+        
+        private void processScannedFile (String jsonResponse, DBService DBConn, InputStream uploadedInputStream, String nameFile)
+        {
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Map<String, Object> mapResult = AvadsUtil.gson.fromJson(jsonResponse, type);
+            
+            SimpleDateFormat fecha = new SimpleDateFormat("dd-MM-yyyy");
+            ResponseScanVirusTotal resSendFile = (ResponseScanVirusTotal) AvadsUtil.getClassReflection(ResponseScanVirusTotal.class, mapResult);
+            FileScanned fileScanned = new FileScanned();
+            fileScanned.setCheckSum(calcHashFile(uploadedInputStream));
+            fileScanned.setFechaRegistro(fecha.format(new Date()));
+            fileScanned.setFechaVencimiento(AvadsUtil.addDaysToDate(fileScanned.getFechaRegistro(), Integer.parseInt(PropertiesServerUtil.getProperty("expiration_time_file_db"))));
+            fileScanned.setNombreArchivo(nameFile);
+            fileScanned.setScanId(resSendFile.getScanId());
+            
+            DBConn.insertCollection("Files_Scanned", fileScanned.toJSON());
         }
                 
 
