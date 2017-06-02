@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,6 +109,20 @@ public class AvadsUtil {
         }
         
         return dateR;
+    }
+    
+    public static String addDaysToDate(String date, int daysToAdd)
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(dateFormat.parse(date));
+        } catch (ParseException ex) {
+            Logger.getLogger(AvadsUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        c.add(Calendar.DATE, daysToAdd);  
+        
+        return dateFormat.format(c.getTime());
     }
     
     public static Object getClassReflection(Class clase, Map<String, Object> values) {
