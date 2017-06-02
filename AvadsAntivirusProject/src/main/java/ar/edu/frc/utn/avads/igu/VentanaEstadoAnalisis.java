@@ -264,13 +264,10 @@ public class VentanaEstadoAnalisis extends javax.swing.JFrame {
         int filaE = -1;
         for(int i=0; i<jTableEstadoArchivos.getRowCount();i++)
         {
-            if(anA.getIdProceso() == Integer.parseInt(jTableEstadoArchivos.getValueAt(i, 1).toString()))
+            if(anA.getIdProceso() == Integer.parseInt(jTableEstadoArchivos.getValueAt(i, 1).toString()) || anA.getArchivo().compareTo(jTableEstadoArchivos.getValueAt(i, 2).toString()) == 0)
             {
-                if(anA.getArchivo().compareTo(jTableEstadoArchivos.getValueAt(i, 2).toString()) == 0) 
-                {
                     filaE = i;
                     break;
-                }
             }
         }
         
@@ -291,6 +288,7 @@ public class VentanaEstadoAnalisis extends javax.swing.JFrame {
         else
         {
             jTableEstadoArchivos.setValueAt(anA.getEstado(), filaE, 3);
+            jTableEstadoArchivos.setValueAt(anA.getIdProceso(), filaE, 1);
         }
     }  
     

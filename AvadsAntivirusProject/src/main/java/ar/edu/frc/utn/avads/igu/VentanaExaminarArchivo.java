@@ -41,10 +41,6 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
         jPanelArchivosExaminar.setBorder(javax.swing.BorderFactory.createTitledBorder(PropertiesClientUtil.getProperty("igu.examinarArchivos.panelSeleccionArchivos.title")));
         
         jLabelCantidadArchivos.setText(PropertiesClientUtil.getProperty("igu.examinarArchivos.cantidadArchivos"));
-        jLabelGuardarReporte.setText(PropertiesClientUtil.getProperty("igu.examinarArchivos.guardarReporte"));
-        
-        jRadioButtonNO.setText(PropertiesClientUtil.getProperty("igu.examinarArchivos.guardarReporte.NO"));
-        jRadioButtonSI.setText(PropertiesClientUtil.getProperty("igu.examinarArchivos.guardarReporte.SI"));
         
         jButtonEjecutar.setIcon(AvadsUtil.getImageIconByPath(PropertiesClientUtil.getProperty("igu.examinarArchivos.imagen.boton.ejecutar")));
         jButtonEjecutar.setToolTipText(PropertiesClientUtil.getProperty("igu.examinarArchivos.boton.ejecutar"));
@@ -72,13 +68,9 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroupGuardarReporte = new javax.swing.ButtonGroup();
         jPanelParametrosGenerales = new javax.swing.JPanel();
         jLabelCantidadArchivos = new javax.swing.JLabel();
         jComboBoxCantidadArchivos = new javax.swing.JComboBox<String>();
-        jLabelGuardarReporte = new javax.swing.JLabel();
-        jRadioButtonSI = new javax.swing.JRadioButton();
-        jRadioButtonNO = new javax.swing.JRadioButton();
         jPanelArchivosExaminar = new javax.swing.JPanel();
         jTextFieldArchivo1 = new javax.swing.JTextField();
         jButtonSeleccionArchivo1 = new javax.swing.JButton();
@@ -111,15 +103,6 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
             }
         });
 
-        jLabelGuardarReporte.setText("Guardar Reporte:");
-
-        buttonGroupGuardarReporte.add(jRadioButtonSI);
-        jRadioButtonSI.setText("Si");
-
-        buttonGroupGuardarReporte.add(jRadioButtonNO);
-        jRadioButtonNO.setSelected(true);
-        jRadioButtonNO.setText("No");
-
         javax.swing.GroupLayout jPanelParametrosGeneralesLayout = new javax.swing.GroupLayout(jPanelParametrosGenerales);
         jPanelParametrosGenerales.setLayout(jPanelParametrosGeneralesLayout);
         jPanelParametrosGeneralesLayout.setHorizontalGroup(
@@ -129,13 +112,7 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
                 .addComponent(jLabelCantidadArchivos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxCantidadArchivos, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabelGuardarReporte)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButtonSI)
-                .addGap(12, 12, 12)
-                .addComponent(jRadioButtonNO)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(199, Short.MAX_VALUE))
         );
         jPanelParametrosGeneralesLayout.setVerticalGroup(
             jPanelParametrosGeneralesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,10 +120,7 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanelParametrosGeneralesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelCantidadArchivos)
-                    .addComponent(jComboBoxCantidadArchivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelGuardarReporte)
-                    .addComponent(jRadioButtonSI)
-                    .addComponent(jRadioButtonNO))
+                    .addComponent(jComboBoxCantidadArchivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -515,7 +489,6 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
     }  
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroupGuardarReporte;
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonEjecutar;
     private javax.swing.JButton jButtonSeleccionArchivo1;
@@ -525,11 +498,8 @@ public class VentanaExaminarArchivo extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> jComboBoxCantidadArchivos;
     private javax.swing.JFileChooser jFileChooserArchivo;
     private javax.swing.JLabel jLabelCantidadArchivos;
-    private javax.swing.JLabel jLabelGuardarReporte;
     private javax.swing.JPanel jPanelArchivosExaminar;
     private javax.swing.JPanel jPanelParametrosGenerales;
-    private javax.swing.JRadioButton jRadioButtonNO;
-    private javax.swing.JRadioButton jRadioButtonSI;
     private javax.swing.JTextField jTextFieldArchivo1;
     private javax.swing.JTextField jTextFieldArchivo2;
     private javax.swing.JTextField jTextFieldArchivo3;

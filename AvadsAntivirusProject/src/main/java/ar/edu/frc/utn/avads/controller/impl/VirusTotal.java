@@ -18,6 +18,9 @@ import ar.edu.frc.utn.avads.util.AvadsUtil;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,6 +54,7 @@ public class VirusTotal implements AnalisisVirus{
         examinarArchivo.setEstado("Inicio");
         examinarArchivo.setFecha(AvadsUtil.getDate(fechaYHora));
         examinarArchivo.setHora(AvadsUtil.getHour(fechaYHora));
+        
         Long idMaxProceso = AvadsMain.serviceDB.getMaxIdProceso("Examinar_Archivo", "idProceso");
         if(idMaxProceso == -1L) idMaxProceso = 1L;
         else idMaxProceso++;
@@ -62,13 +66,77 @@ public class VirusTotal implements AnalisisVirus{
             AnalisisArchivo anA = new AnalisisArchivo();
             anA.setArchivo(archivosAnalizar[i]);
             anA.setFechaEnvio(fechaYHora);
-            anA.setEstado("Enviando");
+            anA.setEstado("Procesando");
             anA.setIdProceso(examinarArchivo.getId());
             
             vEstadoArchivos.agregarAnalisisArchivo(anA);
+            Map<String, Object> searchValAnd = new HashMap<String, Object>();
+            searchValAnd.put("archivo", anA.getArchivo());
+
+            Map<String, ArrayList<Object>> searchValOr = new HashMap<String, ArrayList<Object>>();
+            ArrayList<Object> valueOrKey = new ArrayList<Object>();
+            valueOrKey.add("En Cola");
+            valueOrKey.add("Procesando");
+            searchValOr.put("estado", valueOrKey);            
             
-            anA.setJSON_Respuesta(fileScanService.scanFileJSON(new File(archivosAnalizar[i])));
-            AvadsMain.serviceDB.insertCollection("Analisis_Archivo", anA.toJSON());
+            List<String> anaArchivo = AvadsMain.serviceDB.findObjectCollectionMultipleAtributesWithOR("Analisis_Archivo", searchValOr, searchValAnd);
+            if(anaArchivo.isEmpty())
+            {
+                anA.setJSON_Respuesta(fileScanService.scanFileJSON(new File(archivosAnalizar[i])));    
+                AvadsMain.serviceDB.insertCollection("Analisis_Archivo", anA.toJSON());
+            }
+            else
+            {
+                if(anaArchivo.size() == 1)
+                {
+                    for(String anaArch : anaArchivo)
+                    {
+                        AnalisisArchivo analArchiC = (AnalisisArchivo) AvadsUtil.gson.fromJson(anaArch, AnalisisArchivo.class);
+                        
+                        Map<String, Object> search = new HashMap<String, Object>();
+                        search.put("idProceso", analArchiC.getIdProceso());
+
+                        Map<String, Object> upVal = new HashMap<String, Object>();
+                        upVal.put("idProceso", examinarArchivo.getId());
+                        AvadsMain.serviceDB.updateObjectCollection("Analisis_Archivo", search, upVal);
+                    }
+                }
+                else
+                {
+                    List<AnalisisArchivo> anaArchOrd = new ArrayList<AnalisisArchivo>();
+                    for(String anaArch : anaArchivo)
+                    {
+                        AnalisisArchivo analisisArchiC = (AnalisisArchivo) AvadsUtil.gson.fromJson(anaArch, AnalisisArchivo.class);
+                        anaArchOrd.add(analisisArchiC);
+                    }
+                    
+                    Collections.sort(anaArchOrd, new Comparator<AnalisisArchivo>() {
+                            @Override
+                            public int compare(final AnalisisArchivo object1, final AnalisisArchivo object2) {
+                            return object1.getIdProceso() < object2.getIdProceso() ? -1
+                                    : object1.getIdProceso() > object2.getIdProceso() ? 1
+                                    : 0;
+                            }
+                    } );
+                    
+                    AnalisisArchivo anaArchU = anaArchOrd.get(anaArchOrd.size()-1);
+                    Map<String, Object> search = new HashMap<String, Object>();
+                    search.put("idProceso", anaArchU.getIdProceso());
+
+                    Map<String, Object> upVal = new HashMap<String, Object>();
+                    upVal.put("idProceso", examinarArchivo.getId());
+                    AvadsMain.serviceDB.updateObjectCollection("Analisis_Archivo", search, upVal);                    
+                    anaArchOrd.remove(anaArchU);
+                    
+                    for(AnalisisArchivo anaArch : anaArchOrd)
+                    {
+                        Map<String, Object> removeVal = new HashMap<String, Object>();
+                        removeVal.put("idProceso", anaArch.getIdProceso());
+                        removeVal.put("archivo", anaArch.getArchivo());
+                        AvadsMain.serviceDB.removeObjectCollectionMultipleAtributes("Analisis_Archivo", removeVal); 
+                    }
+                }
+            }
             vEstadoArchivos.agregarAnalisisArchivo(anA);
         }        
         if(examinarArchivo.getEstado().compareTo("Con Errores") != 0) examinarArchivo.setEstado("En Analisis");
