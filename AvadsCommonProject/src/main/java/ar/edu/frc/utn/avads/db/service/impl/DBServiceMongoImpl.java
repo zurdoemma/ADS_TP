@@ -7,6 +7,7 @@ package ar.edu.frc.utn.avads.db.service.impl;
 
 import ar.edu.frc.utn.avads.db.service.DBService;
 import ar.edu.frc.utn.avads.util.PropertiesUtil;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
  
 import com.mongodb.DB;
@@ -138,8 +139,71 @@ public class DBServiceMongoImpl implements DBService{
         }
         
         return list;
-    }    
+    }
+    
+    @Override
+    public List<String> findObjectCollectionMultipleAtributesWithOR(String nomCollection, Map<String,ArrayList<Object>> atributeORValue, Map<String,Object> atributeANDValue) {
         
+        DBCollection collectionDB = db.getCollection(nomCollection);
+        
+        DBObject removeIdProjection = new BasicDBObject("_id", 0);
+        BasicDBList orValues = new BasicDBList();
+        
+        for (Map.Entry<String, ArrayList<Object>> entry : atributeORValue.entrySet())
+        {
+            List<Object> listValueOrFromKey = entry.getValue();
+            
+            for(Object valueORFromKey : listValueOrFromKey)
+            {
+                if(valueORFromKey.getClass().equals(String.class)) orValues.add(new BasicDBObject(entry.getKey(), String.valueOf(valueORFromKey)));
+                if(valueORFromKey.getClass().equals(Integer.class)) orValues.add(new BasicDBObject(entry.getKey(), Integer.parseInt(String.valueOf(valueORFromKey))));
+                if(valueORFromKey.getClass().equals(Long.class)) orValues.add(new BasicDBObject(entry.getKey(), Long.parseLong(String.valueOf(valueORFromKey))));            
+                if(valueORFromKey.getClass().equals(Double.class)) orValues.add(new BasicDBObject(entry.getKey(), Double.parseDouble(String.valueOf(valueORFromKey))));  
+        
+            }
+        }
+        DBObject firstOr = new BasicDBObject( "$or", orValues );
+        BasicDBList andValues = new BasicDBList();
+        andValues.add(firstOr);
+        
+        for (Map.Entry<String, Object> entry : atributeANDValue.entrySet())
+        {
+            if(entry.getValue().getClass().equals(String.class)) andValues.add(new BasicDBObject(entry.getKey(), String.valueOf(entry.getValue())));
+            if(entry.getValue().getClass().equals(Integer.class)) andValues.add(new BasicDBObject(entry.getKey(), Integer.parseInt(String.valueOf(entry.getValue()))));
+            if(entry.getValue().getClass().equals(Long.class)) andValues.add(new BasicDBObject(entry.getKey(), Long.parseLong(String.valueOf(entry.getValue()))));            
+            if(entry.getValue().getClass().equals(Double.class)) andValues.add(new BasicDBObject(entry.getKey(), Double.parseDouble(String.valueOf(entry.getValue()))));  
+        }        
+        
+        System.out.println(andValues);
+        DBCursor cursor = collectionDB.find(andValues, removeIdProjection);
+        List<String> list;
+        list = new ArrayList<>();
+        while (cursor.hasNext()) 
+        {
+            list.add(cursor.next().toString());
+        }
+        
+        return list;
+    }     
+     
+    @Override
+    public boolean removeObjectCollectionMultipleAtributes(String nomCollection, Map<String,Object> atributeValue) {
+        
+        DBCollection collectionDB = db.getCollection(nomCollection);
+        BasicDBObject documentR = new BasicDBObject();
+        
+        for (Map.Entry<String, Object> entry : atributeValue.entrySet())
+        {
+            if(entry.getValue().getClass().equals(String.class)) documentR.put(entry.getKey(), String.valueOf(entry.getValue()));
+            if(entry.getValue().getClass().equals(Integer.class)) documentR.put(entry.getKey(), Integer.parseInt(String.valueOf(entry.getValue())));
+            if(entry.getValue().getClass().equals(Long.class)) documentR.put(entry.getKey(), Long.parseLong(String.valueOf(entry.getValue())));            
+            if(entry.getValue().getClass().equals(Double.class)) documentR.put(entry.getKey(), Double.parseDouble(String.valueOf(entry.getValue())));  
+        }
+        
+        if(collectionDB.remove(documentR).toString().contains("n=0")) return false;
+        else return true;
+    }
+    
     @Override
     public boolean removeObjectCollection(String nomCollection, String atribute, Object value) {
         

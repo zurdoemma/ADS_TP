@@ -5,6 +5,7 @@
  */
 package ar.edu.frc.utn.avads.db.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,8 @@ public interface DBService {
     Long getMaxIdProceso(String nomCollection, String atribute);
     List<String> findObjectCollection(String nomCollection, String atribute, Object value);
     List<String> findObjectCollectionMultipleAtributes(String nomCollection, Map<String,Object> atributeValue);
+    List<String> findObjectCollectionMultipleAtributesWithOR(String nomCollection, Map<String,ArrayList<Object>> atributeORValue, Map<String,Object> atributeANDValue);    
+    boolean removeObjectCollectionMultipleAtributes(String nomCollection, Map<String,Object> atributeValue);
     boolean removeObjectCollection(String nomCollection, String atribute, Object value);
     Long getCountObjectsCollection(String nomCollection);
     boolean updateObjectCollection(String nomCollection, Map<String, Object> atributeValueSearch, Map<String, Object> atributeValueUpdate);
