@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 @Path("/v1/file")
 public class FileScanRestServiceImpl implements FileScanRestService {
 
-	private static final String UPLOAD_FOLDER = "/uploadedFiles/";
+	private static final String UPLOAD_FOLDER = "./uploadedFiles/";
 
 	private FileScanService fileScanService = new VirusTotalFileScanServiceImpl();
 	
@@ -60,6 +60,7 @@ public class FileScanRestServiceImpl implements FileScanRestService {
 	@POST
         @Path("scan")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response fileScan(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
@@ -196,13 +197,6 @@ public class FileScanRestServiceImpl implements FileScanRestService {
                 while ((bytesCount = fileStream.read(byteArray)) != -1) {
                     md.update(byteArray, 0, bytesCount);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(FileScanRestServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            try {
-                //close the stream; We don't need it now.
-                fileStream.close();
             } catch (IOException ex) {
                 Logger.getLogger(FileScanRestServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
